@@ -6,8 +6,11 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 from multiprocessing import Process, Value, Array
 
-logging.basicConfig(level=logging.DEBUG, format='%(processName)s %(message)s')
+from logger import get_logger
 
+logger = get_logger(__name__)
+
+logging.basicConfig(level=logging.DEBUG, format="%(processName)s - %(message)s")
 
 def get_divisor_list(number: int) -> List[int]:
     results = []
@@ -18,7 +21,7 @@ def get_divisor_list(number: int) -> List[int]:
         if number % i == 0:
             results.append(i)
             results.append(number // i)
-    logging.info(f'number - {number}')
+    logging.debug(f'number - {number}')
     return sorted(results)
 
 
@@ -72,15 +75,15 @@ def factorize_in_process(*number) -> tuple:
 if __name__ == '__main__':
     start1 = time.time()
     res1 = factorize(128, 255, 99999, 10651060)
-    print(time.time() - start1)
+    logger.info(f"factorize {time.time() - start1}")
 
     start2 = time.time()
     res2 = factorize_in_process_pool(128, 255, 99999, 10651060)
-    print(time.time() - start2)
+    logger.info(f"factorize_in_process_pool {time.time() - start1}")
 
     start3 = time.time()
     a, b, c, d = factorize_in_process(128, 255, 99999, 10651060)
-    print(time.time() - start3)
+    logger.info(f"factorize_in_process {time.time() - start1}")
 
     assert a == [1, 2, 4, 8, 16, 32, 64, 128]
     assert b == [1, 3, 5, 15, 17, 51, 85, 255]
