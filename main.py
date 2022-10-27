@@ -12,12 +12,13 @@ logger = get_logger(__name__)
 
 logging.basicConfig(level=logging.DEBUG, format="%(processName)s - %(message)s")
 
+
 def get_divisor_list(number: int) -> List[int]:
     results = []
 
-    max_divisor = math.ceil(number ** .5)
+    max_divisor = math.floor(number ** .5)
 
-    for i in range(1, max_divisor):
+    for i in range(1, max_divisor + 1):
         if number % i == 0:
             results.append(i)
             results.append(number // i)
@@ -57,7 +58,7 @@ def factorize_in_process(*number) -> tuple:
     results = [[] for i in range(len(number))]
 
     for i in range(len(number)):
-        results[i] = Array('i', [0 for i in range(2 * math.ceil(number[i] ** .5))])
+        results[i] = Array('i', [0 for i in range(2 * (math.floor(number[i] ** .5) + 1))])
         processes.append(Process(target=get_divisor_list_pr, args=(number[i], results[i])))
 
     [pr.start() for pr in processes]
